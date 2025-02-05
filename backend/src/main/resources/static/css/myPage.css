@@ -1,0 +1,32 @@
+/* myPage.css */
+/* ------------------------------------------------------
+   마이페이지 관련 스타일 (검정/흰색)
+--------------------------------------------------------- */
+.mypage-container {
+  display: flex;
+  min-height: 80vh;
+  background-color: var(--secondary-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+.mypage-sidebar {
+  width: 200px;
+  background-color: #f2f2f2;
+  padding: 1rem;
+}
+.mypage-sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+.mypage-sidebar li {
+  margin: 8px 0;
+}
+.mypage-sidebar a {
+  color: var(--primary-color);
+  font-weight: bold;
+}
+.mypage-content {
+  flex: 1;
+  padding: 1rem;
+  background-color: var(--secondary-color);
+}

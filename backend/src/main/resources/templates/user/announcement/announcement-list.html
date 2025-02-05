@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" class="announcement-list-user-page">
+<head>
+  <meta charset="UTF-8">
+  <title>공지사항 목록</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/common.css">
+  <script src="https://kit.fontawesome.com/a390ee81f6.js" crossorigin="anonymous"></script>
+
+</head>
+<body>
+  <header th:replace="~{fragments/header :: header}"></header>
+  
+  <div class="container">
+    <h1 class="title">공지사항 목록</h1>
+    <div th:if="${successMessage}">
+      <p style="color:green;" th:text="${successMessage}"></p>
+    </div>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>제목</th>
+          <th>작성일</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="ann : ${announcements}">
+          <td th:text="${ann.postId}"></td>
+          <td>
+            <a th:href="@{/announcements/{postId}(postId=${ann.postId})}" class="link-button">
+              <span th:text="${ann.title}">공지사항 제목</span>
+            </a>
+          </td>
+          <td th:text="${#temporals.format(ann.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

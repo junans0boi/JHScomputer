@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>구매 상세</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/common.css">
+  <script src="https://kit.fontawesome.com/a390ee81f6.js" crossorigin="anonymous"></script>
+  <script src="https://kit.fontawesome.com/a390ee81f6.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <header th:replace="~{fragments/header :: header}"></header>
+  
+  <div class="container purchase-detail-container">
+    <h1 class="title">구매 상세</h1>
+    <p><strong>구매ID:</strong> <span th:text="${purchase.purchaseId}"></span></p>
+    <p><strong>구매일자:</strong> <span th:text="${#temporals.format(purchase.purchasedAt, 'yyyy-MM-dd HH:mm')}"></span></p>
+    <p><strong>총 결제금액:</strong> <span th:text="${purchase.totalPaid}"></span>원</p>
+    <h2>견적 품목</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>분류</th>
+          <th>제품명</th>
+          <th>수량</th>
+          <th>단가</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="item : ${purchase.quotation.items}">
+          <td th:text="${item.category}"></td>
+          <td th:text="${item.productName}"></td>
+          <td th:text="${item.quantity}"></td>
+          <td th:text="${item.price}"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

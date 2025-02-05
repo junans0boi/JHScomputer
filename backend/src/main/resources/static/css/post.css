@@ -1,0 +1,82 @@
+/* post.css */
+/* ------------------------------------------------------
+   게시판 전용 스타일 (검정/흰색)
+--------------------------------------------------------- */
+.post-create-page,
+.post-detail-page,
+.post-list-page {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-family: var(--font-family);
+  padding: 20px;
+}
+.post-create-container,
+.post-detail-container,
+.post-list-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: var(--secondary-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 20px;
+}
+.post-create-form-group label,
+.post-detail-title,
+.post-list-card-title {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+.post-create-form-group input[type="text"],
+.post-create-editable {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+.post-create-submit-btn {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+  font-size: 18px;
+}
+.post-create-submit-btn:hover {
+  background-color: #333;
+}
+/* 게시글 목록 카드 */
+.post-list-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.post-list-card {
+  width: 300px;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  overflow: hidden;
+  text-decoration: none;
+  color: var(--text-color);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.post-list-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+.post-list-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+.post-list-card-body {
+  padding: 15px;
+}
+.post-list-card-date {
+  font-size: 14px;
+  color: #555;
+}

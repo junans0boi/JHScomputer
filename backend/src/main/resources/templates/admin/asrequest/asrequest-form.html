@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" class="asrequest-edit-page">
+<head>
+  <meta charset="UTF-8">
+  <title>관리자 - AS 요청 상태 수정</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/common.css">
+  <link rel="stylesheet" href="/css/asrequest.css">
+  <script src="https://kit.fontawesome.com/a390ee81f6.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <!-- Navbar -->
+  <header th:replace="~{fragments/header :: header}"></header>
+  
+  <div class="container">
+    <h1 class="title">AS 요청 상태 수정</h1>
+    <div class="asrequest-edit-container">
+      <div class="asrequest-details-section">
+        <div th:if="${success}">
+          <p class="link-button" style="color:green;" th:text="${success}"></p>
+        </div>
+        <div th:if="${error}">
+          <p class="link-button" style="color:red;" th:text="${error}"></p>
+        </div>
+        <form th:action="@{/admin/asrequest/{requestId}/update(requestId=${request.requestId})}" method="post">
+          <table class="table">
+            <tbody>
+              <tr>
+                <th>요청 ID</th>
+                <td th:text="${request.requestId}"></td>
+              </tr>
+              <tr>
+                <th>장비 유형</th>
+                <td th:text="${request.deviceType == T(com.example.jhscomputer.asrequest.entity.ASRequest.DeviceType).DESKTOP ? '데스크탑' : '노트북'}"></td>
+              </tr>
+              <tr>
+                <th>현재 상태</th>
+                <td th:text="${request.status == T(com.example.jhscomputer.asrequest.enumpackage.ASRequestStatus).PENDING ? '대기 중' : request.status == T(com.example.jhscomputer.asrequest.enumpackage.ASRequestStatus).IN_PROGRESS ? '처리 중' : '처리 완료'}"></td>
+              </tr>
+              <tr>
+                <th>새로운 상태</th>
+                <td>
+                  <select id="status" name="status" class="input-field" required>
+                    <option th:each="s : ${statuses}" th:value="${s}"
+                      th:text="${s == T(com.example.jhscomputer.asrequest.enumpackage.ASRequestStatus).PENDING ? '대기 중' : s == T(com.example.jhscomputer.asrequest.enumpackage.ASRequestStatus).IN_PROGRESS ? '처리 중' : '처리 완료'}"
+                      th:selected="${s} == ${request.status}"></option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <th>불편한 증상 및 요구사항</th>
+                <td>
+                  <textarea id="issueDescription" name="issueDescription" rows="5" class="input-field" required th:text="${request.issueDescription}"></textarea>
+                </td>
+              </tr>
+              <tr th:if="${request.deviceType == T(com.example.jhscomputer.asrequest.entity.ASRequest.DeviceType).LAPTOP}">
+                <th>제조일자</th>
+                <td>
+                  <input type="date" id="manufactureDate" name="manufactureDate" class="input-field" th:value="${#temporals.format(request.manufactureDate, 'yyyy-MM-dd')}" required>
+                </td>
+              </tr>
+              <tr th:if="${request.deviceType == T(com.example.jhscomputer.asrequest.entity.ASRequest.DeviceType).LAPTOP}">
+                <th>모델명</th>
+                <td>
+                  <input type="text" id="modelName" name="modelName" class="input-field" th:value="${request.modelName}" required>
+                </td>
+              </tr>
+              <tr th:if="${request.deviceType == T(com.example.jhscomputer.asrequest.entity.ASRequest.DeviceType).DESKTOP}">
+                <th>구매시기</th>
+                <td>
+                  <input type="date" id="purchaseDate" name="purchaseDate" class="input-field" th:value="${request.purchaseDate}" required>
+                </td>
+              </tr>
+              <tr th:if="${request.deviceType == T(com.example.jhscomputer.asrequest.entity.ASRequest.DeviceType).DESKTOP}">
+                <th>구매처</th>
+                <td>
+                  <input type="text" id="purchaseSource" name="purchaseSource" class="input-field" th:value="${request.purchaseSource}" required>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <button type="submit" class="button">상태 업데이트</button>
+        </form>
+      </div>
+      
+      <div class="asrequest-user-section">
+        <h2>신청자 정보</h2>
+        <table class="table">
+          <tbody>
+            <tr>
+              <th>이름</th>
+              <td th:text="${request.user.username}"></td>
+            </tr>
+            <tr>
+              <th>주소</th>
+              <td th:text="${request.user.address}"></td>
+            </tr>
+            <tr>
+              <th>연락처</th>
+              <td th:text="${request.user.phoneNum}"></td>
+            </tr>
+            <tr>
+              <th>이메일</th>
+              <td th:text="${request.user.email}"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

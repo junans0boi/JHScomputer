@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>유튜브 동영상 - 정효성 컴퓨터</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/common.css">
+  <link rel="stylesheet" href="/css/youtubeAPI.css">
+  <script src="https://kit.fontawesome.com/a390ee81f6.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <header th:replace="~{fragments/header :: header}"></header>
+  
+  <main>
+    <!-- 동영상 목록 컨테이너 -->
+    <section class="video-container" id="videos" aria-label="유튜브 동영상 목록">
+      <!-- 동영상 목록이 동적으로 생성됩니다 -->
+    </section>
+    <!-- 페이지네이션 컨트롤 -->
+    <div id="pagination" class="pagination"></div>
+  </main>
+  
+  <script src="/js/main.js" defer></script>
+  <script src="/js/youtubeAPI.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,305 @@
+/* ------------------------------------------------------
+   전역 기본 스타일 및 리셋 (black/white 테마)
+--------------------------------------------------------- */
+:root {
+  --primary-color: #000;
+  --secondary-color: #fff;
+  --background-color: #fff;
+  --text-color: #000;
+  --border-color: #ccc;
+  --font-family: Arial, sans-serif;
+  --transition-speed: 0.3s;
+}
+
+/* 컨테이너 기본 */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+/* 링크 */
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+a:hover,
+a:focus {
+  text-decoration: underline;
+}
+
+/* 비주얼 히든 (접근성용) */
+.visually-hidden {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+
+/* ------------------------------------------------------
+   공통 컴포넌트 및 변수 (검정/흰색 테마)
+--------------------------------------------------------- */
+:root {
+  --primary-color: #000;       /* 기본 글자 및 강조 색상 */
+  --secondary-color: #fff;     /* 배경 등 흰색 */
+  --text-color: #000;
+  --background-color: #fff;
+  --border-color: #ccc;
+  --transition-speed: 0.3s;
+  --font-family: Arial, sans-serif;
+}
+
+/* 리셋 및 기본 스타일 */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
+  padding: 0;
+  margin: 0;
+}
+
+/* 컨테이너 */
+.container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: var(--secondary-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+
+/* 제목 */
+.title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+/* 버튼 */
+.button,
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color var(--transition-speed);
+  text-decoration: none;
+  text-align: center;
+}
+
+.button:hover,
+.btn:hover {
+  background-color: #333;
+}
+
+/* 폼 입력 필드 */
+.input-field,
+textarea,
+select {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+/* 테이블 */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.table th,
+.table td {
+  padding: 12px 15px;
+  border: 1px solid var(--border-color);
+  text-align: left;
+}
+
+.table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.table tr:hover {
+  background-color: #f9f9f9;
+}
+
+/* 링크 버튼 */
+.link-button {
+  color: var(--primary-color);
+  font-weight: bold;
+  text-decoration: none;
+  margin-right: 10px;
+}
+
+.link-button:hover {
+  text-decoration: underline;
+}
+
+/* 반응형 */
+@media (max-width: 600px) {
+  .container {
+    width: 90%;
+    padding: 15px;
+  }
+  .input-field,
+  textarea,
+  select {
+    padding: 8px;
+    font-size: 13px;
+  }
+  .button,
+  .btn {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+}
+
+/* ------------------------------------------------------
+   [추가] 헤더 스타일 (PC 상단 검은색 헤더 + 모바일 하단 메뉴)
+--------------------------------------------------------- */
+
+/* PC용 상단 헤더 영역 */
+.header-main {
+  background-color: var(--primary-color); /* 검은색 배경 */
+  color: var(--secondary-color);          /* 텍스트 흰색 */
+}
+
+.header-main__container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  height: 60px; /* 헤더 높이 */
+}
+
+/* 로고 영역 */
+.header-main__logo a {
+  display: flex;
+  align-items: center;
+}
+
+.header-main__logo img {
+  width: 40px;
+  height: auto;
+  margin-right: 8px;
+}
+
+.header-main__logo span {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: var(--secondary-color);
+}
+
+/* PC 상단 메뉴 */
+.header-main__nav ul {
+  display: flex;
+  list-style: none;
+  gap: 1.5rem;
+}
+
+.header-main__nav ul li a {
+  color: var(--secondary-color);
+  font-size: 0.95rem;
+  padding: 8px;
+}
+
+.header-user {
+  margin-right: 1rem;
+  color : #ffffff;
+}
+
+.header-logout,
+.header-login {
+  background: var(--secondary-color);
+  color: var(--primary-color);
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  margin-left: 0.5rem;
+}
+
+/* 모바일 하단 네비게이션 */
+.mobile-bottom-nav {
+  display: none;  /* PC에서는 숨김 */
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: var(--secondary-color);
+  border-top: 1px solid var(--border-color);
+  z-index: 999;
+}
+
+.mobile-bottom-nav ul {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  list-style: none;
+  height: 60px;
+  margin: 0;
+  padding: 0;
+}
+
+.mobile-bottom-nav ul li {
+  flex: 1;
+  text-align: center;
+}
+
+.mobile-bottom-nav ul li a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.75rem;
+  color: var(--text-color);
+  line-height: 1.2;
+}
+
+.mobile-bottom-nav ul li a i{
+  padding-bottom: 10px;
+}
+
+
+/* 반응형 - 768px 이하에서 모바일 메뉴 보이기 */
+@media (max-width: 768px) {
+  /* PC 상단 메뉴 숨기기 */
+  .header-main {
+    display: none;
+  }
+  /* 모바일 하단 메뉴 보이기 */
+  .mobile-bottom-nav {
+    display: block;
+  }
+}

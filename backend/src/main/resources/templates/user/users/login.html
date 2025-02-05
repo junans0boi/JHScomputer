@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" class="login-page">
+<head>
+  <meta charset="UTF-8">
+  <title>로그인 - 정효성 컴퓨터</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/common.css">
+  <link rel="stylesheet" href="/css/login.css">
+  <script src="https://kit.fontawesome.com/a390ee81f6.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <header th:replace="~{fragments/header :: header}"></header>
+  
+  <main>
+    <div class="container login-container">
+      <div class="logo">정효성 컴퓨터</div>
+      <div class="tagline">컴퓨터를 빠르고 쉽게 로그인하세요</div>
+      <div th:if="${param.error}">
+        <p class="login-error">이메일 또는 비밀번호가 잘못되었습니다.</p>
+      </div>
+      <div th:if="${param.logout}">
+        <p class="login-success">정상적으로 로그아웃 되었습니다.</p>
+      </div>
+      <form id="login-form" th:action="@{/api/login}" method="post" aria-label="로그인 폼">
+        <label for="email" class="visually-hidden">이메일</label>
+        <input type="text" id="email" name="email" class="input-field" placeholder="이메일" required>
+        <label for="password" class="visually-hidden">비밀번호</label>
+        <input type="password" id="password" name="password" class="input-field" placeholder="비밀번호" required>
+        <label>
+          <input type="checkbox" name="remember-me"> 로그인 상태 유지
+        </label>
+        <br>
+        <button type="submit" class="button login-btn" disabled>로그인</button>
+      </form>
+      <div class="help-links">
+        <a href="/register">회원가입</a>
+        <span>|</span>
+        <a href="#">이메일 찾기</a>
+        <span>|</span>
+        <a href="#">비밀번호 찾기</a>
+      </div>
+    </div>
+  </main>
+  
+  <script th:src="@{/js/login.js}" defer></script>
+</body>
+</html>

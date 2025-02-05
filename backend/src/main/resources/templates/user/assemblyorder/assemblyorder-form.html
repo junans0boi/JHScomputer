@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" class="order-page">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>컴퓨터 조립 요청 양식</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/common.css">
+  <!-- assemblyOrder.css 에 사용자용 스타일 추가 -->
+  <link rel="stylesheet" href="/css/assemblyOrder.css">
+  <script src="https://kit.fontawesome.com/a390ee81f6.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <header th:replace="~{fragments/header :: header}"></header>
+  
+  <div class="container">
+    <h2 class="title">컴퓨터 조립 요청 양식</h2>
+    <form th:action="@{/api/orders/submit}" method="POST">
+      <div class="form-group">
+        <label for="budget">예산</label>
+        <input type="text" id="budget" name="budget" class="input-field" placeholder="예: 100만원" required>
+      </div>
+      <div class="form-group">
+        <label for="favoriteGames">하시는 게임</label>
+        <input type="text" id="favoriteGames" name="favoriteGames" class="input-field" placeholder="예: 리그 오브 레전드">
+      </div>
+      <div class="form-group">
+        <label for="workType">작업/프로그래밍</label>
+        <input type="text" id="workType" name="workType" class="input-field" placeholder="예: 영상 편집">
+      </div>
+      <div class="form-group">
+        <label for="cpuType">선호하는 CPU 회사</label>
+        <select id="cpuType" name="cpuType" class="input-field">
+          <option value="none">상관없음</option>
+          <option value="intel">Intel</option>
+          <option value="amd">AMD</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="conceptColors">원하는 컴퓨터 색상</label>
+        <select id="conceptColors" name="conceptColors" class="input-field">
+          <option value="white">화이트</option>
+          <option value="black">블랙</option>
+          <option value="whiteblue">화이트블루</option>
+          <option value="pink">핑크</option>
+          <option value="custom">직접 입력</option>
+        </select>
+        <input type="text" id="customColor" name="customConceptColor" class="input-field" placeholder="직접 입력" style="display:none;">
+      </div>
+      <div class="form-group">
+        <label for="purchaseDate">구매시기(중요)</label>
+        <input type="date" id="purchaseDate" name="purchaseDate" class="input-field" required>
+      </div>
+      <div class="form-group">
+        <label for="coolerType">선호 쿨러 종류 (선택)</label>
+        <select id="coolerType" name="coolerType" class="input-field">
+          <option value="default">기본 쿨러</option>
+          <option value="air">공랭쿨러</option>
+          <option value="water">수냉 쿨러</option>
+          <option value="custom">직접 입력</option>
+        </select>
+        <input type="text" id="customCooler" name="customCoolerType" class="input-field" placeholder="직접 입력" style="display:none;">
+      </div>
+      <div class="form-group">
+        <label for="requirements">요구하는 부품(선택)</label>
+        <textarea id="requirements" name="requirements" class="input-field" placeholder="예: 미니멀 디자인"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="contact">상담을 위해 카카오톡 플러스 친구로 성함을 채팅으로 남겨주세요</label>
+        <a href="https://pf.kakao.com/_QxnxdxdK" target="_blank" class="link-button" style="color:red;">카카오톡 플러스 친구 바로가기[클릭]</a>
+        <input type="text" id="contact" name="contact" class="input-field" placeholder="예: 연락드렸습니다.">
+      </div>
+      <div class="form-group">
+        <button type="submit" class="button">제출</button>
+      </div>
+    </form>
+  </div>
+  
+  <script>
+    document.getElementById('conceptColors').addEventListener('change', function () {
+      const customColorInput = document.getElementById('customColor');
+      customColorInput.style.display = this.value === 'custom' ? 'block' : 'none';
+      if (this.value !== 'custom') customColorInput.value = '';
+    });
+    document.getElementById('coolerType').addEventListener('change', function () {
+      const customCoolerInput = document.getElementById('customCooler');
+      customCoolerInput.style.display = this.value === 'custom' ? 'block' : 'none';
+      if (this.value !== 'custom') customCoolerInput.value = '';
+    });
+  </script>
+</body>
+</html>

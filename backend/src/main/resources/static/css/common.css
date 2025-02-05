@@ -1,0 +1,127 @@
+/* common.css */
+/* ------------------------------------------------------
+   공통 컴포넌트 및 변수 (검정/흰색 테마)
+--------------------------------------------------------- */
+:root {
+  --primary-color: #000;       /* 기본 글자 및 강조 색상 */
+  --secondary-color: #fff;     /* 배경 등 흰색 */
+  --text-color: #000;
+  --background-color: #fff;
+  --border-color: #ccc;
+  --transition-speed: 0.3s;
+  --font-family: Arial, sans-serif;
+}
+
+/* 리셋 및 기본 스타일 */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: var(--font-family);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
+  padding: 0;
+  margin: 0;
+}
+
+/* 컨테이너 */
+.container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: var(--secondary-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+
+/* 제목 */
+.title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+/* 버튼 */
+.button,
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color var(--transition-speed);
+  text-decoration: none;
+  text-align: center;
+}
+.button:hover,
+.btn:hover {
+  background-color: #333;
+}
+
+/* 폼 입력 필드 */
+.input-field,
+textarea,
+select {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+/* 테이블 */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+.table th,
+.table td {
+  padding: 12px 15px;
+  border: 1px solid var(--border-color);
+  text-align: left;
+}
+.table th {
+  background-color: #fff;
+  font-weight: bold;
+}
+.table tr:hover {
+  background-color: #f9f9f9;
+}
+
+/* 링크 버튼 */
+.link-button {
+  color: var(--primary-color);
+  font-weight: bold;
+  text-decoration: none;
+  margin-right: 10px;
+}
+.link-button:hover {
+  text-decoration: underline;
+}
+
+/* 반응형 */
+@media (max-width: 600px) {
+  .container {
+    width: 90%;
+    padding: 15px;
+  }
+  .input-field,
+  textarea,
+  select {
+    padding: 8px;
+    font-size: 13px;
+  }
+  .button,
+  .btn {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" class="announcement-detail-user-page">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${announcement.title} + ' - 공지사항 상세'">공지사항 상세</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/common.css">
+  <script src="https://kit.fontawesome.com/a390ee81f6.js" crossorigin="anonymous"></script>
+
+</head>
+<body>
+  <header th:replace="~{fragments/header :: header}"></header>
+  
+  <div class="container">
+    <h1 class="title" th:text="${announcement.title}">공지사항 제목</h1>
+    <p th:text="${#temporals.format(announcement.createdAt, 'yyyy-MM-dd HH:mm')}"></p>
+    <div th:utext="${announcement.content}"></div>
+    <div th:if="${announcement.attachmentImage != null}">
+      <img th:src="${announcement.attachmentImage}" alt="첨부 이미지">
+    </div>
+    <div th:if="${#lists.size(announcement.images) > 0}">
+      <div th:each="img : ${announcement.images}">
+        <img th:src="${img.imageUrl}" alt="첨부 이미지">
+      </div>
+    </div>
+    <a href="/announcements" class="button">목록으로 돌아가기</a>
+  </div>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" class="profile-page">
+<head>
+  <meta charset="UTF-8">
+  <title>마이페이지 - 회원정보 수정</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/common.css">
+  <link rel="stylesheet" href="/css/profile.css">
+  <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+  <script src="https://kit.fontawesome.com/a390ee81f6.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <header th:replace="~{fragments/header :: header}"></header>
+  
+  <div class="container profile-container">
+    <h2 class="title">마이페이지</h2>
+    <div th:if="${registrationSuccess}">
+      <p class="profile-success">회원정보가 성공적으로 수정되었습니다.</p>
+    </div>
+    <div th:if="${registrationError}">
+      <p class="profile-error" th:text="${registrationError}"></p>
+    </div>
+    <form th:action="@{/api/profile/update}" method="post" id="profile-form">
+      <div class="form-group">
+        <label for="email">이메일</label>
+        <input type="email" id="email" name="email" class="input-field" th:value="${user.email}" readonly>
+      </div>
+      <div class="form-group">
+        <label for="password">새 비밀번호</label>
+        <input type="password" id="password" name="password" class="input-field" placeholder="새 비밀번호(변경 시)">
+      </div>
+      <div class="form-group">
+        <label for="passwordConfirm">비밀번호 확인</label>
+        <input type="password" id="passwordConfirm" name="passwordConfirm" class="input-field" placeholder="변경 시 비밀번호 재입력">
+      </div>
+      <div class="form-group">
+        <label for="username">이름</label>
+        <input type="text" id="username" name="username" class="input-field" th:value="${user.username}" required>
+      </div>
+      <div class="form-group">
+        <label for="phoneNum">전화번호</label>
+        <input type="text" id="phoneNum" name="phoneNum" class="input-field" th:value="${user.phoneNum}" required>
+      </div>
+      <div class="form-group">
+        <label>주소</label>
+        <input type="text" id="sample6_postcode" placeholder="우편번호" class="input-field" style="max-width:200px;" readonly>
+        <input type="button" class="postcode-btn" onclick="sample6_execDaumPostcode()" value="우편번호 찾기">
+        <input type="text" id="sample6_address" name="addressBase" placeholder="기본주소" class="input-field" readonly>
+        <input type="text" id="sample6_extraAddress" name="addressExtra" class="input-field" readonly>
+        <input type="text" id="sample6_detailAddress" name="addressDetail" placeholder="상세주소" class="input-field">
+      </div>
+      <div class="form-group">
+        <button type="button" id="update-button" class="button profile-submit-btn">수정하기</button>
+      </div>
+    </form>
+  </div>
+  
+  <div id="password-popup" class="profile-modal">
+    <div class="profile-modal-content">
+      <span class="profile-close-button">&times;</span>
+      <h3>비밀번호 확인</h3>
+      <form id="password-confirm-form">
+        <div class="form-group">
+          <label for="currentPassword">현재 비밀번호</label>
+          <input type="password" id="currentPassword" name="currentPassword" class="input-field" required>
+        </div>
+        <button type="submit" class="button profile-submit-btn">확인</button>
+      </form>
+      <p id="popup-error" class="profile-error">비밀번호가 일치하지 않습니다.</p>
+    </div>
+  </div>
+  
+  <script>
+    function sample6_execDaumPostcode() {
+      new daum.Postcode({
+        oncomplete: function(data) {
+          let addr = data.userSelectedType === 'R' ? data.roadAddress : data.jibunAddress;
+          let extraAddr = '';
+          if (data.userSelectedType === 'R') {
+            if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+              extraAddr += data.bname;
+            }
+            if (data.buildingName !== '' && data.apartment === 'Y') {
+              extraAddr += extraAddr !== '' ? ', ' + data.buildingName : data.buildingName;
+            }
+            if (extraAddr !== '') {
+              extraAddr = ' (' + extraAddr + ')';
+            }
+            document.getElementById("sample6_extraAddress").value = extraAddr;
+          } else {
+            document.getElementById("sample6_extraAddress").value = '';
+          }
+          document.getElementById('sample6_postcode').value = data.zonecode;
+          document.getElementById("sample6_address").value = addr;
+          document.getElementById("sample6_detailAddress").focus();
+        }
+      }).open();
+    }
+    
+    document.getElementById('update-button').addEventListener('click', function () {
+      document.getElementById('password-popup').style.display = 'block';
+    });
+    
+    document.querySelector('.profile-close-button').addEventListener('click', function () {
+      document.getElementById('password-popup').style.display = 'none';
+    });
+    
+    window.addEventListener('click', function (event) {
+      if (event.target == document.getElementById('password-popup')) {
+        document.getElementById('password-popup').style.display = 'none';
+      }
+    });
+    
+    document.getElementById('password-confirm-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const currentPassword = document.getElementById('currentPassword').value;
+      fetch('/api/profile/verify-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ currentPassword: currentPassword })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.verified) {
+          document.getElementById('password-popup').style.display = 'none';
+          document.getElementById('profile-form').submit();
+        } else {
+          document.getElementById('popup-error').style.display = 'block';
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    });
+  </script>
+</body>
+</html>

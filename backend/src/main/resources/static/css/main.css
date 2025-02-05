@@ -1,0 +1,281 @@
+/* main.css */
+
+/* main 태그 내 콘텐츠에 여백 추가 */
+main {
+    padding: 20px;
+}
+
+/* 유튜브 동영상 배너 영역 스타일 */
+.video-banner {
+    width: 100%;
+    height: 250px;
+    overflow-x: auto;
+    /* 가로 스크롤 */
+    overflow-y: hidden;
+    background-color: #f9f9f9;
+    /* 심플한 배경색 */
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+/* 스크롤바 스타일 (선택사항) */
+.video-banner::-webkit-scrollbar {
+    height: 6px;
+}
+
+.video-banner::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 3px;
+}
+
+/* 각 동영상 카드 스타일 */
+.video {
+    position: relative;
+    flex: 0 0 auto;
+    width: 300px;
+    /* 카드 너비 (필요시 조정) */
+    height: 100%;
+    background-color: var(--secondary-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform var(--transition-speed);
+}
+
+/* 마우스 오버시 살짝 확대 효과 */
+.video:hover {
+    transform: scale(1.03);
+}
+
+/* 카드 내부 링크 스타일 */
+.video a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    color: inherit;
+    /* 부모 텍스트 컬러 상속 */
+    text-decoration: none;
+}
+
+/* 썸네일 이미지 스타일 (높이 100% 적용) */
+.video img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 동영상 제목을 이미지 하단에 오버레이 */
+.video h3 {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    margin: 0;
+    padding: 10px;
+    font-size: 1rem;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.736);
+    color: var(--secondary-color);
+    box-sizing: border-box;
+}
+
+/* Hero 섹션 */
+.hero-section {
+    background: url('/img/hero-bg.jpg') center/cover no-repeat;
+    padding: 30px 20px;
+    color: var(--secondary-color);
+    text-align: center;
+}
+
+.hero-section .hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+    color:#fff;
+}
+
+.hero-section h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.hero-section p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+}
+
+.hero-section .button {
+    padding: 12px 24px;
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color var(--transition-speed);
+}
+
+.hero-section .button:hover {
+    background-color: #333;
+}
+
+/* 서비스 섹션 */
+.services-section {
+    padding: 40px 20px;
+    background-color: #f7f7f7;
+    text-align: center;
+}
+
+.services-section h2 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    color: var(--primary-color);
+}
+
+.services-grid {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.service-item {
+    background-color: var(--secondary-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    width: 300px;
+    padding: 20px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: transform var(--transition-speed);
+}
+
+.service-item:hover {
+    transform: scale(1.03);
+}
+
+.service-item img {
+    width: 150px;
+    height: 150px;
+    margin-bottom: 15px;
+}
+
+.service-item h3 {
+    margin-bottom: 10px;
+    font-size: 1.3rem;
+}
+
+.service-item p {
+    font-size: 1rem;
+    color: #555;
+}
+
+/* 고객 후기 섹션 */
+.reviews-section {
+    padding: 40px 20px;
+    background-color: var(--secondary-color);
+    text-align: center;
+    padding-bottom: 150px;
+}
+
+.reviews-section h2 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    color: var(--primary-color);
+}
+
+.review-slider {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.review-item {
+    background-color: #f7f7f7;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    max-width: 400px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.review-item p {
+    font-style: italic;
+    margin-bottom: 10px;
+}
+
+.review-item h4 {
+    font-weight: normal;
+    color: #333;
+}
+
+/* footer 고정 및 좌우 레이아웃 */
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--primary-color);
+    border-top: 1px solid var(--border-color);
+    padding: 10px 20px;
+    /* 좌우 여백 추가 */
+    box-sizing: border-box;
+    z-index: 998;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-right a {
+    color: #fff;
+}
+
+/* 왼쪽 영역: SNS 아이콘 */
+.footer-left {
+    display: flex;
+    align-items: center;
+}
+
+/* SNS 아이콘 영역 스타일 */
+.footer-sns {
+    display: flex;
+    gap: 15px;
+}
+
+.footer-sns a img {
+    width: 24px;
+    /* 필요에 따라 아이콘 크기 조절 */
+    height: auto;
+    transition: transform var(--transition-speed);
+}
+
+.footer-sns a:hover img {
+    transform: scale(1.1);
+}
+
+/* 오른쪽 영역: 텍스트 정보 */
+.footer-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: right;
+    font-size: 0.9rem;
+}
+
+
+/* 반응형: 화면 크기에 따라 카드 너비 조정 */
+@media (max-width: 768px) {
+    .video {
+        width: 250px;
+    }
+
+    footer {
+        display: none;
+    }
+
+}
+
+@media (max-width: 480px) {
+    .video {
+        width: 200px;
+    }
+}

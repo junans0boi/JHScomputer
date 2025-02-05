@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" class="asrequest-list-page">
+<head>
+  <meta charset="UTF-8">
+  <title>관리자 - AS 요청 목록</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/common.css">
+  <link rel="stylesheet" href="/css/asrequest.css">
+  <script src="https://kit.fontawesome.com/a390ee81f6.js" crossorigin="anonymous"></script>
+
+</head>
+<body>
+  <!-- Navbar -->
+  <header th:replace="~{fragments/header :: header}"></header>
+  
+  <div class="container">
+    <h1 class="title">AS 요청 목록</h1>
+    
+    <div th:if="${success}">
+      <p style="color:green;" th:text="${success}"></p>
+    </div>
+    <div th:if="${error}">
+      <p style="color:red;" th:text="${error}"></p>
+    </div>
+    
+    <table class="table">
+      <thead>
+        <tr>
+          <th>요청 ID</th>
+          <th>사용자</th>
+          <th>장비 유형</th>
+          <th>상태</th>
+          <th>작업</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="request : ${requests}">
+          <td th:text="${request.requestId}"></td>
+          <td th:text="${request.user.username}"></td>
+          <td th:text="${request.deviceType == T(com.example.jhscomputer.asrequest.entity.ASRequest.DeviceType).DESKTOP ? '데스크탑' : '노트북'}"></td>
+          <td th:text="${request.status == T(com.example.jhscomputer.asrequest.enumpackage.ASRequestStatus).PENDING ? '대기 중' : request.status == T(com.example.jhscomputer.asrequest.enumpackage.ASRequestStatus).IN_PROGRESS ? '처리 중' : '처리 완료'}"></td>
+          <td>
+            <a th:href="@{/admin/asrequest/{requestId}/edit(requestId=${request.requestId})}" class="link-button">수정</a>
+            <form th:action="@{/admin/asrequest/{requestId}/delete(requestId=${request.requestId})}" method="post" style="display:inline;" onsubmit="return confirm('정말로 이 AS 요청을 삭제하시겠습니까?');">
+              <button type="submit" class="button">삭제</button>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

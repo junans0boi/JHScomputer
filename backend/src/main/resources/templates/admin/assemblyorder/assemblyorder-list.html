@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" class="assembly-list-page">
+<head>
+  <meta charset="UTF-8">
+  <title>관리자 - 주문 목록</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/common.css">
+  <link rel="stylesheet" href="/css/assemblyOrder.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <header th:replace="~{fragments/header :: header}"></header>
+  
+  <div class="container">
+    <h1 class="title">주문 목록</h1>
+    <div th:if="${success}">
+      <p style="color:green;" th:text="${success}"></p>
+    </div>
+    <div th:if="${error}">
+      <p style="color:red;" th:text="${error}"></p>
+    </div>
+    
+    <table class="table">
+      <thead>
+        <tr>
+          <th>주문 ID</th>
+          <th>사용자</th>
+          <th>예산</th>
+          <th>상태</th>
+          <th>작업</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="order : ${orders}">
+          <td th:text="${order.orderId}"></td>
+          <td th:text="${order.user.username}"></td>
+          <td th:text="${order.budget}"></td>
+          <td th:text="${order.status == T(com.example.jhscomputer.assemblyorder.enumpackage.AssemblyOrderStatus).PENDING ? '대기 중' : order.status == T(com.example.jhscomputer.assemblyorder.enumpackage.AssemblyOrderStatus).IN_PROGRESS ? '처리 중' : '처리 완료'}"></td>
+          <td>
+            <a th:href="@{/admin/orders/{orderId}/edit(orderId=${order.orderId})}" class="link-button">수정</a>
+            <form th:action="@{/admin/orders/{orderId}/delete(orderId=${order.orderId})}" method="post" style="display:inline;" onsubmit="return confirm('정말로 이 주문을 삭제하시겠습니까?');">
+              <button type="submit" class="button">삭제</button>
+            </form>
+            <a th:href="@{/admin/estimate/{orderId}(orderId=${order.orderId})}" class="link-button">견적서 작성</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

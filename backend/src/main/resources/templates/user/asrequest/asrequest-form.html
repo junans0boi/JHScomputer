@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" class="asrequest-page">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>고객센터</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/common.css">
+  <link rel="stylesheet" href="/css/asrequest.css">
+  <script src="https://kit.fontawesome.com/a390ee81f6.js" crossorigin="anonymous"></script>
+
+</head>
+<body>
+  <header th:replace="~{fragments/header :: header}"></header>
+  
+  <div class="container">
+    <h1 class="title">고객센터</h1>
+    <div class="tabs">
+      <button class="button" id="desktopTab" onclick="showForm('desktop')">데스크탑 수리 접수</button>
+      <button class="button" id="laptopTab" onclick="showForm('laptop')">노트북 수리 접수</button>
+    </div>
+    
+    <div th:if="${registrationSuccess}">
+      <p class="success-message">AS 요청이 성공적으로 접수되었습니다.</p>
+    </div>
+    <div th:if="${registrationError}">
+      <p class="error-message" th:text="${registrationError}"></p>
+    </div>
+    
+    <div id="desktopForm" class="form-section">
+      <h2>데스크탑 수리 접수</h2>
+      <form th:action="@{/api/asrequest/submit}" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="deviceType" value="DESKTOP">
+        <div class="form-group">
+          <label for="issueDescription">불편한 증상 및 요구사항</label>
+          <textarea id="issueDescription" name="issueDescription" class="input-field" placeholder="예: 전원이 켜지지 않습니다." required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="purchaseDate">구매 시기</label>
+          <input type="date" id="purchaseDate" name="purchaseDate" class="input-field" placeholder="예: 2022-01-01">
+        </div>
+        <div class="form-group">
+          <label for="purchaseSource">구매처</label>
+          <input type="text" id="purchaseSource" name="purchaseSource" class="input-field" placeholder="예: ABC 컴퓨터">
+        </div>
+        <div class="form-group">
+          <label for="quotationAttachment">구매 견적서 첨부</label>
+          <input type="file" id="quotationAttachment" name="quotationAttachment" accept=".pdf,.jpg,.png" class="input-field">
+        </div>
+        <div class="form-group">
+          <button type="submit" class="button">AS 요청 제출</button>
+        </div>
+      </form>
+      <p class="note">
+        주소: 경기도 오산시 초평로 84-4 신동아2차아파트 203동 401호<br>
+        정효성 010-4936-3881<br>* 사전 연락 없이 방문 불가
+      </p>
+    </div>
+    
+    <div id="laptopForm" class="form-section">
+      <h2>노트북 수리 접수</h2>
+      <form th:action="@{/api/asrequest/submit}" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="deviceType" value="LAPTOP">
+        <div class="form-group">
+          <label for="issueDescription2">불편한 증상 및 요구사항</label>
+          <textarea id="issueDescription2" name="issueDescription" class="input-field" placeholder="예: 화면이 깜빡입니다." required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="manufactureDate">제조일자</label>
+          <input type="date" id="manufactureDate" name="manufactureDate" class="input-field" placeholder="예: 2021-03-15">
+        </div>
+        <div class="form-group">
+          <label for="modelName">모델명</label>
+          <input type="text" id="modelName" name="modelName" class="input-field" placeholder="예: ABC 모델">
+        </div>
+        <div class="form-group">
+          <button type="submit" class="button">AS 요청 제출</button>
+        </div>
+      </form>
+      <p class="note">
+        노트북은 사양을 확인해보고 추후 업그레이드 방향을 말씀드립니다.<br>
+        박스 안에 충전 어댑터, 주소, 성함, 번호를 꼭 작성하여 배송해주세요.<br><br>
+        주소: 경기도 오산시 초평로 84-4 신동아2차아파트 203호 401호<br>
+        정효성 010-4936-3881
+      </p>
+    </div>
+  </div>
+  
+  <script>
+    function showForm(formType) {
+      document.getElementById('desktopForm').style.display = (formType === 'desktop') ? 'block' : 'none';
+      document.getElementById('laptopForm').style.display = (formType === 'laptop') ? 'block' : 'none';
+    }
+    showForm('desktop');
+  </script>
+</body>
+</html>

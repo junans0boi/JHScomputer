@@ -1,0 +1,45 @@
+/* announcement.css */
+/* ------------------------------------------------------
+   공지사항 관련 스타일 (모든 색상은 검정/흰색)
+--------------------------------------------------------- */
+.announcement-container {
+  margin: 40px auto;
+  padding: 20px;
+  background-color: var(--secondary-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+.announcement-container h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.announcement-success {
+  color: green;
+  text-align: center;
+  margin-bottom: 15px;
+}
+.announcement-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+.announcement-table th,
+.announcement-table td {
+  padding: 12px 15px;
+  border: 1px solid var(--border-color);
+  text-align: left;
+}
+.announcement-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+.announcement-table tr:hover {
+  background-color: #f9f9f9;
+}
+.announcement-back-to-list {
+  display: block;
+  text-align: center;
+  margin-top: 30px;
+  color: var(--primary-color);
+  font-weight: bold;
+}

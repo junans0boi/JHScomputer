@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" class="assembly-edit-page">
+<head>
+  <meta charset="UTF-8">
+  <title>주문 상태 수정</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/common.css">
+  <link rel="stylesheet" href="/css/assemblyOrder.css">
+  <script src="https://kit.fontawesome.com/a390ee81f6.js" crossorigin="anonymous"></script>
+
+</head>
+<body>
+  <!-- Navbar -->
+  <header th:replace="~{fragments/header :: header}"></header>
+  
+  <div class="container">
+    <h1 class="title">주문 상태 수정</h1>
+    <div class="assembly-edit-container">
+      <div class="assembly-edit-table-section">
+        <form th:action="@{/admin/orders/{orderId}/update(orderId=${order.orderId})}" method="post">
+          <table class="table">
+            <tbody>
+              <tr>
+                <th>주문 ID</th>
+                <td th:text="${order.orderId}"></td>
+              </tr>
+              <tr>
+                <th>예산</th>
+                <td>
+                  <textarea id="budget" name="budget" rows="1" class="input-field" th:text="${order.budget}"></textarea>
+                </td>
+              </tr>
+              <tr>
+                <th>좋아하는 게임</th>
+                <td th:text="${order.favoriteGames}"></td>
+              </tr>
+              <tr>
+                <th>작업 유형</th>
+                <td th:text="${order.workType}"></td>
+              </tr>
+              <tr>
+                <th>CPU 타입</th>
+                <td th:text="${order.cpuType}"></td>
+              </tr>
+              <tr>
+                <th>구성 색상</th>
+                <td>
+                  <select id="conceptColors" name="conceptColors" class="input-field"
+                    th:if="${order.conceptColors == 'white' or order.conceptColors == 'black' or order.conceptColors == 'whiteblue' or order.conceptColors == 'pink'}">
+                    <option th:selected="${order.conceptColors == 'white'}" value="white">화이트</option>
+                    <option th:selected="${order.conceptColors == 'black'}" value="black">블랙</option>
+                    <option th:selected="${order.conceptColors == 'whiteblue'}" value="whiteblue">스카이블루</option>
+                    <option th:selected="${order.conceptColors == 'pink'}" value="pink">핑크</option>
+                  </select>
+                  <span th:unless="${order.conceptColors == 'white' or order.conceptColors == 'black' or order.conceptColors == 'whiteblue' or order.conceptColors == 'pink'}" th:text="${order.conceptColors}"></span>
+                </td>
+              </tr>
+              <tr>
+                <th>구매 예정일</th>
+                <td th:text="${#temporals.format(order.purchaseDate, 'yyyy-MM-dd')}"></td>
+              </tr>
+              <tr>
+                <th>쿨러 타입</th>
+                <td>
+                  <select id="coolerType" name="coolerType" class="input-field" th:if="${order.coolerType == 'default' or order.coolerType == 'air' or order.coolerType == 'water'}">
+                    <option th:selected="${order.coolerType == 'default'}" value="default">기본 쿨러</option>
+                    <option th:selected="${order.coolerType == 'air'}" value="air">공랭쿨러</option>
+                    <option th:selected="${order.coolerType == 'water'}" value="water">수냉쿨러</option>
+                  </select>
+                  <span th:unless="${order.coolerType == 'default' or order.coolerType == 'air' or order.coolerType == 'water'}" th:text="${order.coolerType}"></span>
+                </td>
+              </tr>
+              <tr>
+                <th>요구 사항</th>
+                <td>
+                  <textarea id="requirements" name="requirements" rows="5" class="input-field" th:text="${order.requirements}"></textarea>
+                </td>
+              </tr>
+              <tr>
+                <th>현재 상태</th>
+                <td th:text="${order.status == T(com.example.jhscomputer.assemblyorder.enumpackage.AssemblyOrderStatus).PENDING ? '대기 중' : order.status == T(com.example.jhscomputer.assemblyorder.enumpackage.AssemblyOrderStatus).IN_PROGRESS ? '처리 중' : '처리 완료'}"></td>
+              </tr>
+              <tr>
+                <th>새로운 상태</th>
+                <td>
+                  <select id="status" name="status" class="input-field" required>
+                    <option th:each="s : ${statuses}" th:value="${s}" 
+                      th:text="${s == T(com.example.jhscomputer.assemblyorder.enumpackage.AssemblyOrderStatus).PENDING ? '대기 중' : s == T(com.example.jhscomputer.assemblyorder.enumpackage.AssemblyOrderStatus).IN_PROGRESS ? '처리 중' : s == T(com.example.jhscomputer.assemblyorder.enumpackage.AssemblyOrderStatus).COMPLETED ? '처리 완료' : s.name()}"
+                      th:selected="${s} == ${order.status}"></option>
+                  </select>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <button type="submit" class="button">상태 업데이트</button>
+        </form>
+      </div>
+      
+      <div class="assembly-edit-table-section">
+        <h2>신청자 정보</h2>
+        <table class="table">
+          <tbody>
+            <tr>
+              <th>이름</th>
+              <td th:text="${order.user.username}"></td>
+            </tr>
+            <tr>
+              <th>주소</th>
+              <td th:text="${order.user.address}"></td>
+            </tr>
+            <tr>
+              <th>연락처</th>
+              <td th:text="${order.user.phoneNum}"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

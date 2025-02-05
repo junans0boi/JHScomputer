@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Header Fragment</title>
+  <link rel="stylesheet" href="/css/common.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+  <header th:fragment="header">
+    <!-- PC용 상단 헤더 -->
+    <div class="header-main">
+      <div class="header-main__container">
+
+        <!-- 로고 영역 -->
+        <div class="header-main__logo">
+          <a href="/" aria-label="홈으로 이동">
+            <!-- 적절한 로고 이미지 경로 적용 -->
+            <img src="/img/logo.png" alt="정효성 컴퓨터 로고">
+            <span>JungHyosung Computer</span>
+          </a>
+        </div>
+
+        <!-- 상단 메뉴(PC에서 보임) -->
+        <nav class="header-main__nav" aria-label="주요 메뉴">
+          <ul>
+            <li><a href="/announcements">공지사항</a></li>
+            <li><a href="/youtubeAPI">가격별 컴퓨터</a></li>
+            <li><a href="/assemblyorder">주문 요청</a></li>
+            <li><a href="/asrequest">AS신청</a></li>
+
+            <!-- 로그인 상태일 때 -->
+            <div sec:authorize="isAuthenticated()">
+              <a href="/user/mypage" class="header-user">
+                <span th:text="${#authentication.principal.displayName} + '님'">Username</span>
+              </a>
+              <a href="/api/logout" class="header-logout">로그아웃</a>
+            </div>
+
+            <!-- 비로그인 상태일 때 -->
+            <div sec:authorize="isAnonymous()">
+              <a href="/login" class="header-login">로그인</a>
+            </div>
+
+            <!-- 관리자 전용 메뉴 -->
+            <li sec:authorize="hasRole('ADMIN')">
+              <a href="/admin/dashboard">관리자</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+
+    <!-- 모바일용 하단 네비게이션 (아이콘 + 라벨) -->
+    <nav class="mobile-bottom-nav" aria-label="하단 메뉴(모바일)">
+      <ul>
+        <li>
+          <a href="/" aria-label="홈으로 이동">
+            <i class="fa-solid fa-house"></i>
+            <span>홈</span>
+          </a>
+        </li>
+        <li>
+          <a href="/youtubeAPI">
+            <i class="fa-brands fa-youtube"></i>
+            <span>가격별 컴퓨터</span>
+          </a>
+        </li>
+        <li>
+          <a href="/assemblyorder">
+            <i class="fa-solid fa-desktop"></i>
+            <span>주문 요청</span>
+          </a>
+        </li>
+        <li>
+          <a href="/asrequest">
+            <i class="fa-solid fa-wrench"></i>
+            <span>AS 신청</span>
+          </a>
+        </li>
+        <li>
+          <!-- 로그인/비로그인 상태에 따라 이동 경로 달라질 수 있음 -->
+          <a href="/user/mypage">
+            <i class="fa-solid fa-user"></i>
+            <span class="mypage-text">마이페이지</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+</body>
+
+</html>

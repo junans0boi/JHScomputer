@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>내 주문 목록</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/common.css">
+  <script src="https://kit.fontawesome.com/a390ee81f6.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <header th:replace="~{fragments/header :: header}"></header>
+  
+  <div class="container">
+    <h1 class="title">내 주문 목록</h1>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>주문ID</th>
+          <th>예산</th>
+          <th>상태</th>
+          <th>견적</th>
+          <th>구매</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="dto : ${orderDTOs}">
+          <td th:text="${dto.order.orderId}"></td>
+          <td th:text="${dto.order.budget}"></td>
+          <td th:text="${dto.order.status}"></td>
+          <td>
+            <span th:if="${dto.quotation != null}">
+              <a th:href="@{/api/profile/orders/{orderId}/quotation(orderId=${dto.order.orderId})}" class="link-button">견적 보기</a>
+            </span>
+            <span th:if="${dto.quotation == null}">견적 없음</span>
+          </td>
+          <td>
+            <span th:if="${dto.quotation != null}">
+              <span th:if="${dto.purchase == null}">
+                <a th:href="@{/api/profile/orders/{orderId}/buy(orderId=${dto.order.orderId})}" class="link-button">구매하기</a>
+              </span>
+              <span th:if="${dto.purchase != null}">이미 구매함</span>
+            </span>
+            <span th:if="${dto.quotation == null}">-</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

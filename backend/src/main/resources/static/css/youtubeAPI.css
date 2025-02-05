@@ -1,0 +1,66 @@
+/* ------------------------------------------------------
+   유튜브 동영상 목록 관련 스타일 (갤러리 스타일)
+--------------------------------------------------------- */
+
+/* 페이지 기본 스타일 */
+.youtube-page {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family);
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+/* 갤러리 컨테이너: grid 레이아웃으로 카드들을 배치 */
+.video-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);  /* PC: 3열 */
+  gap: 20px;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* 각 동영상 카드 스타일 */
+.video {
+  background-color: var(--secondary-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform var(--transition-speed);
+}
+
+/* 마우스 오버 시 살짝 확대 효과 */
+.video:hover {
+  transform: scale(1.02);
+}
+
+/* 카드 내부 링크 전체를 클릭 가능하도록 설정 */
+.video a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* 썸네일 이미지: 카드 상단에 꽉 차게 표시 */
+.video img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* 동영상 제목: 카드 하단에 제목 영역으로 표시 */
+.video h3 {
+  font-size: 1rem;
+  padding: 10px;
+  text-align: center;
+  background-color: #f9f9f9;
+  margin: 0;
+}
+
+/* 반응형: 모바일(768px 이하)에서는 2열로 변경 */
+@media (max-width: 768px) {
+  .video-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

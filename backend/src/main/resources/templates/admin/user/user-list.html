@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" class="user-list-page">
+
+<head>
+  <meta charset="UTF-8">
+  <title>관리자 - 회원 리스트</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/common.css">
+  <link rel="stylesheet" href="/css/user-list.css">
+</head>
+
+<body>
+  <header th:replace="~{fragments/header :: header}"></header>
+
+  <div class="container">
+    <h1 class="title">회원 리스트</h1>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>회원 ID</th>
+          <th>이메일</th>
+          <th>이름</th>
+          <th>연락처</th>
+          <th>자세히</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="u : ${users}">
+          <td th:text="${u.userId}"></td>
+          <td th:text="${u.email}"></td>
+          <td th:text="${u.username}"></td>
+          <td th:text="${u.phoneNum}"></td>
+          <td>
+            <span class="link-button detail-btn" th:attr="data-user-id=${u.userId}">보기</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div id="userDetailModal" class="user-detail-modal">
+    <div class="user-detail-content">
+      <span id="modalCloseBtn" class="modal-close">&times;</span>
+      <h2>회원 상세 정보</h2>
+      <div id="userDetailBody">
+        <!-- AJAX 내용 -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const detailButtons = document.querySelectorAll('.detail-btn');
+      const modal = document.getElementById('userDetailModal');
+      const modalCloseBtn = document.getElementById('modalCloseBtn');
+      const userDetailBody = document.getElementById('userDetailBody');
+
+      detailButtons.forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const userId = btn.getAttribute('data-user-id');
+          const response = await fetch(`/admin/users/${userId}`);
+          if (response.ok) {
+            const userData = await response.json();
+            userDetailBody.innerHTML = `
+            <table>
+              <tr>
+                <th>ID</th>
+                <td>${userData.userId}</td>
+              </tr>
+              <tr>
+                <th>이메일</th>
+                <td>${userData.email}</td>
+              </tr>
+              <tr>
+                <th>이름</th>
+                <td>${userData.username}</td>
+              </tr>
+              <tr>
+                <th>주소</th>
+                <td>${userData.address}</td>
+              </tr>
+              <tr>
+                <th>연락처</th>
+                <td>${userData.phoneNum}</td>
+              </tr>
+              <tr>
+                <th>권한</th>
+                <td>${Array.from(userData.roles).join(', ')}</td>
+              </tr>
+            </table>
+          `;
+            modal.style.display = 'block';
+          } else {
+            alert('회원 정보를 불러오는 데 실패했습니다.');
+          }
+        });
+      });
+
+      modalCloseBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+      });
+      window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.style.display = 'none';
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

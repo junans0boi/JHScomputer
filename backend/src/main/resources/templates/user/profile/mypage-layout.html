@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>마이페이지 레이아웃</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/common.css">
+  <script src="https://kit.fontawesome.com/a390ee81f6.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <header th:replace="~{fragments/header :: header}"></header>
+  
+  <div class="container" style="display: flex; min-height: 80vh;">
+    <aside style="width:200px; background:#f2f2f2; padding:1rem;">
+      <ul style="list-style:none; padding-left:0;">
+        <li style="margin:8px 0;"><a th:href="@{/profile/info}">내 정보</a></li>
+        <li style="margin:8px 0;"><a th:href="@{/profile/orders}">주문 내역</a></li>
+        <li style="margin:8px 0;"><a th:href="@{/profile/purchases}">구매 내역</a></li>
+      </ul>
+    </aside>
+    <main style="flex:1; padding:1rem; background:#fff;">
+      <div th:replace="${contentTemplate} :: content"></div>
+    </main>
+  </div>
+</body>
+</html>

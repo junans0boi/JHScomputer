@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" class="admin-announcement-form">
+<head>
+  <meta charset="UTF-8">
+  <title>공지사항 작성/수정 - 관리자</title>
+  <link rel="stylesheet" href="/css/common.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/announcement.css">
+  <script src="https://kit.fontawesome.com/a390ee81f6.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <!-- 공통 헤더 -->
+  <header th:replace="~{fragments/header :: header}"></header>
+  
+  <div class="container">
+    <h1 class="title" th:text="${announcement.postId} != null ? '공지사항 수정' : '공지사항 작성'"></h1>
+    
+    <form th:action="@{/admin/announcements/save}" method="post">
+      <input type="hidden" name="postId" th:value="${announcement.postId}" />
+      <div class="form-group">
+        <label for="title">제목</label>
+        <input type="text" id="title" name="title" th:value="${announcement.title}" class="input-field" required />
+      </div>
+      <div class="form-group">
+        <label for="content">내용</label>
+        <textarea id="content" name="content" rows="10" class="input-field" required th:text="${announcement.content}"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="attachmentImage">첨부 이미지 URL</label>
+        <input type="text" id="attachmentImage" name="attachmentImage" th:value="${announcement.attachmentImage}" class="input-field" />
+      </div>
+      <div class="form-group">
+        <label for="status">상태</label>
+        <select id="status" name="status" class="input-field">
+          <option value="active" th:selected="${announcement.status}=='active'">active</option>
+          <option value="inactive" th:selected="${announcement.status}=='inactive'">inactive</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <button type="submit" class="button">저장</button>
+        <a href="/admin/announcements/list" class="button">목록</a>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

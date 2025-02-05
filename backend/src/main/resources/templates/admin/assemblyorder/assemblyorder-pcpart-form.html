@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" th:inline="javascript">
+
+<head>
+    <meta charset="UTF-8">
+    <title>견적표 생성기</title>
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/assemblyOrder.css">
+    <script src="https://kit.fontawesome.com/a390ee81f6.js" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+    <header th:replace="~{fragments/header :: header}"></header>
+
+    <div class="container" id="estimateContainer">
+        <h1 class="title">견적표 생성기</h1>
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            let orderId = /*[[${order.orderId}]]*/ 0;
+            let existingQuote = /*[[${existingQuote}]]*/ null;
+            /*]]>*/
+        </script>
+        <div id="estimateInputSection">
+            <textarea id="inputText" placeholder="컴퓨존 등에서 복붙할 때: 탭(\t)으로 구분된 데이터" class="input-field"></textarea>
+            <button id="generateButton" class="button">견적표 생성</button>
+        </div>
+        <div id="tableContainer">
+            <!-- 동적으로 생성 -->
+        </div>
+        <div id="estimateActions">
+            <button id="saveQuotationBtn" class="button">견적서 저장하기</button>
+            <button onclick="window.location.href='/admin/orders/list'" class="button">주문 목록으로 돌아가기</button>
+        </div>
+    </div>
+
+    <script>
+        // 헬퍼 함수들을 전역에 정의합니다.
+        function matchProduct(category, name) {
+            if (!jsonData[category]) return name;
+            let found = jsonData[category].find(product => name.includes(product));
+            return found || name;
+        }
+
+        function parsePrice(priceStr) {
+            return parseInt(priceStr.replace(/[^0-9]/g, '')) || 0;
+        }
+
+        function formatPrice(num) {
+            return num.toLocaleString('ko-KR') + "원";
+        }
+
+        /* -------------------------------------
+           (1) 유효 카테고리 / 기본 추천 제품명
+        -------------------------------------- */
+        const validCategories = [
+            "CPU", "메인보드", "램(RAM)", "SSD",
+            "그래픽카드", "파워서플라이", "PC 케이스", "PC 쿨링팬", "조립비"
+        ];
+
+        const jsonData = {
+            "CPU": ["[INTEL] 코어13세대 I5-13400F 벌크", "[AMD] 라이젠 5 버미어 5600 ..."],
+            "메인보드": ["[GIGABYTE] H610M K D4 제이씨현", "[ASUS] PRIME A520M-K STCOM ..."],
+            "램(RAM)": ["[삼성전자] 삼성 DDR4 PC4-21300 [8GB] (2666)"],
+            "SSD": ["[파인인포] 삼성전자 병행수입 PM9a1 M.2 NVMe 2280 [512GB TLC]"],
+            "그래픽카드": ["[MANLI] 지포스 RTX 4060 Polar Fox"],
+            "파워서플라이": ["[마이크로닉스] Classic II 풀체인지 600W 80PLUS BRONZE"],
+            "CASE": ["[darkFlash] DCM30 RGB 강화유리 [미니타워] [화이트]"],
+            "PC 쿨링팬": ["[JIUSHARK] JF120R Emerald Auto RGB (블랙) [CPU쿨러]"],
+            "PC 케이스": ["[darkFlash] DCM30 RGB 강화유리 [미니타워] [화이트]"],
+            "조립비": ["(윈도우 설치)"]
+        };
+
+        /* -------------------------------------
+           (2) 페이지 로드 시, 기존 견적이 있다면
+               테이블을 자동 생성
+        -------------------------------------- */
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof existingQuote === 'object' && existingQuote !== null) {
+                // existingQuote.items : [{category, productName, price, quantity}, ...]
+                generateTableFromQuotation(existingQuote.items, existingQuote.totalPrice);
+            }
+        });
+
+        /* -------------------------------------
+           (3) "견적표 생성" 버튼: 입력 텍스트 → 파싱
+        -------------------------------------- */
+        document.getElementById("generateButton").addEventListener("click", function () {
+            const inputText = document.getElementById("inputText").value;
+            if (!inputText.trim()) {
+                alert("입력된 텍스트가 없습니다.");
+                return;
+            }
+
+            const rows = inputText.split('\n').filter(row => row.trim() !== '');
+            const extractedData = rows.map(row => {
+                const columns = row.split('\t');
+                // 컴퓨존 형식에 맞춰 category / name / price / quantity 등이 어떤 칼럼인지는
+                // 실제 데이터를 보며 조절
+                const category = columns[1] || '';
+                const name = columns[2] || '';
+                const price = columns[3] || '';
+                const quantity = ~columns[4] || '';
+                return { category, name, quantity, price };
+            });
+
+            // 유효 카테고리만 필터
+            const filteredData = extractedData.filter(item => validCategories.includes(item.category));
+            buildTable(filteredData);
+        });
+
+        /* -------------------------------------
+           (4) 기존 견적 로드시용: JS로 테이블 구성
+        -------------------------------------- */
+        function generateTableFromQuotation(items, totalPrice) {
+            // items = [{category, productName, quantity, price}, ...]
+            // totalPrice는 DB에 저장되어있는 값. 
+            // 하지만 아래 buildTable에서는 각 품목 합계를 다시 계산하므로 
+            // totalPrice는 마지막에 재계산될 수도 있음
+
+            // validCategories 순서 맞춰서 정렬 or 그대로 사용
+            // 여기서는 단순히 buildTable 함수에 맞게 변환
+            let data = items.map(i => {
+                return {
+                    category: i.category,
+                    name: i.productName,
+                    price: i.price + "", // string
+                    quantity: i.quantity + ""
+                };
+            });
+
+            buildTable(data);
+        }
+
+        /* -------------------------------------
+           (5) 테이블 생성 공통 함수
+        -------------------------------------- */
+        function buildTable(dataArray) {
+            // 고정된 카테고리 순서: "CASE" 대신 "PC 케이스"를 사용합니다.
+            const fixedOrder = [
+                "CPU", "메인보드", "램(RAM)", "PC 쿨링팬", "SSD", "파워서플라이", "PC 케이스", "조립비"
+            ];
+
+            const tableContainer = document.getElementById("tableContainer");
+            let html = `<table class="estimate-table">
+    <thead>
+       <tr>
+         <th>분류</th>
+         <th>제품명</th>
+         <th>수량</th>
+         <th>판매가</th>
+         <th>수정</th>
+       </tr>
+    </thead>
+    <tbody>
+    `;
+
+            let total = 0;
+            // 고정 순서대로 각 카테고리에 대해 행을 생성
+            fixedOrder.forEach((category, idx) => {
+                // dataArray에서 해당 카테고리 항목을 찾습니다.
+                let item = dataArray.find(item => item.category === category);
+                let name, quantity, price;
+                if (item) {
+                    // 항목이 있다면, 헬퍼 함수를 통해 제품명을 보정
+                    name = matchProduct(category, item.name) || item.name;
+                    quantity = parseInt(item.quantity) || 1;
+                    price = parsePrice(item.price);
+                } else {
+                    // 항목이 없으면, 만약 카테고리가 "조립비"라면 기본값 사용,
+                    // 그 외에는 기본값 "null", 수량 0, 가격 0을 할당합니다.
+                    if (category === "조립비") {
+                        name = "(윈도우 설치)";
+                        quantity = 1;
+                        price = 80000;
+                    } else {
+                        name = "null";
+                        quantity = 0;
+                        price = 0;
+                    }
+                }
+                total += (price * quantity);
+                html += rowHtml(idx, category, name, quantity, price);
+            });
+
+            html += `
+       <tr>
+         <td colspan="3">총 합계</td>
+         <td id="total-price">${formatPrice(total)}</td>
+         <td></td>
+       </tr>
+    </tbody></table>`;
+
+            tableContainer.innerHTML = html;
+        }
+        /* -------------------------------------
+           (6) 테이블 행 HTML 생성
+        -------------------------------------- */
+        function rowHtml(index, category, name, quantity, price) {
+            return `
+    <tr id="row-${index}">
+      <td>${category}</td>
+      <td>
+        <span id="name-display-${index}">${name}</span>
+        <input type="text" id="name-edit-${index}" class="hidden" value="${name}">
+      </td>
+      <td>
+        <span id="quantity-display-${index}">${quantity}</span>
+        <input type="number" id="quantity-edit-${index}" class="hidden" value="${quantity}" min="1">
+      </td>
+      <td>
+        <span id="price-display-${index}">${formatPrice(price)}</span>
+        <input type="text" id="price-edit-${index}" class="hidden" value="${price}">
+      </td>
+      <td>
+        <button class="edit-btn" id="edit-btn-${index}" onclick="editRow('${index}')">수정</button>
+        <button class="confirm-btn hidden" id="confirm-btn-${index}" onclick="confirmRow('${index}')">확인</button>
+      </td>
+    </tr>
+    `;
+        }
+
+        /* -------------------------------------
+           (7) 수정 → input 노출
+        -------------------------------------- */
+        function editRow(index) {
+            document.getElementById(`name-display-${index}`).classList.add('hidden');
+            document.getElementById(`quantity-display-${index}`).classList.add('hidden');
+            document.getElementById(`price-display-${index}`).classList.add('hidden');
+
+            document.getElementById(`name-edit-${index}`).classList.remove('hidden');
+            document.getElementById(`quantity-edit-${index}`).classList.remove('hidden');
+            document.getElementById(`price-edit-${index}`).classList.remove('hidden');
+
+            document.getElementById(`edit-btn-${index}`).classList.add('hidden');
+            document.getElementById(`confirm-btn-${index}`).classList.remove('hidden');
+        }
+
+        /* -------------------------------------
+           (8) 수정 완료 → 값 반영, 총합 재계산
+        -------------------------------------- */
+        function confirmRow(index) {
+            const name = document.getElementById(`name-edit-${index}`).value;
+            const quantity = parseInt(document.getElementById(`quantity-edit-${index}`).value) || 1;
+            const price = parsePrice(document.getElementById(`price-edit-${index}`).value);
+
+            document.getElementById(`name-display-${index}`).innerText = name;
+            document.getElementById(`quantity-display-${index}`).innerText = quantity;
+            document.getElementById(`price-display-${index}`).innerText = formatPrice(price);
+
+            document.getElementById(`name-display-${index}`).classList.remove('hidden');
+            document.getElementById(`quantity-display-${index}`).classList.remove('hidden');
+            document.getElementById(`price-display-${index}`).classList.remove('hidden');
+
+            document.getElementById(`name-edit-${index}`).classList.add('hidden');
+            document.getElementById(`quantity-edit-${index}`).classList.add('hidden');
+            document.getElementById(`price-edit-${index}`).classList.add('hidden');
+
+            document.getElementById(`edit-btn-${index}`).classList.remove('hidden');
+            document.getElementById(`confirm-btn-${index}`).classList.add('hidden');
+
+            recalculateTotal();
+        }
+
+        /* -------------------------------------
+           (9) 총합 재계산
+        -------------------------------------- */
+        function recalculateTotal() {
+            const rows = document.querySelectorAll("tr[id^='row-']");
+            let total = 0;
+
+            rows.forEach(row => {
+                const quantitySpan = row.querySelector('[id^="quantity-display-"]');
+                const priceSpan = row.querySelector('[id^="price-display-"]');
+                if (quantitySpan && priceSpan) {
+                    const quantity = parseInt(quantitySpan.innerText) || 1;
+                    const price = parsePrice(priceSpan.innerText);
+                    total += quantity * price;
+                }
+            });
+
+            document.getElementById('total-price').innerText = formatPrice(total);
+        }
+
+        /* -------------------------------------
+           (10) 견적서 저장하기
+        -------------------------------------- */
+        document.getElementById('saveQuotationBtn').addEventListener('click', function () {
+            // 1) CSRF
+            const token = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+            const headerName = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+            // 2) 현재 테이블 -> JSON
+            const rows = document.querySelectorAll("tr[id^='row-']");
+            let items = [];
+            rows.forEach(row => {
+                // row.id 예: row-0, row-1, row-assembly
+                let tdList = row.querySelectorAll("td");
+                if (tdList.length < 4) return;
+                const category = tdList[0].innerText.trim();
+                if (!validCategories.includes(category)) return;
+
+                const name = row.querySelector('[id^="name-display-"]').innerText.trim();
+                const quantity = parseInt(row.querySelector('[id^="quantity-display-"]').innerText.trim()) || 1;
+                const priceText = row.querySelector('[id^="price-display-"]').innerText;
+                const price = parsePrice(priceText);
+
+                items.push({ category, productName: name, quantity, price });
+            });
+            const totalPrice = parsePrice(document.getElementById('total-price').innerText);
+
+            // 3) AJAX POST
+            fetch(`/admin/estimate/orders/${orderId}/estimate/save`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    [headerName]: token
+                },
+                body: JSON.stringify({
+                    orderId: orderId,
+                    totalPrice: totalPrice,
+                    items: items
+                })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("견적서가 저장되었습니다! (quotationId=" + data.quotationId + ")");
+                        window.location.href = "/admin/orders/list";
+                    } else {
+                        alert("견적 저장 실패: " + data.message);
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert("견적 저장 중 오류 발생");
+                });
+        });
+    </script>
+</body>
+
+</html>
